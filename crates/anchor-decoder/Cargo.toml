@@ -1,0 +1,23 @@
+[package]
+name = "anchor-decoder"
+version = "0.1.0"
+edition = "2021"
+description = "A procedural macro for decoding Anchor program instructions and accounts"
+authors = ["jshiohaha <jlshiohira23@gmail.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/jshiohaha/anchor-decoder"
+documentation = "https://docs.rs/anchor-decoder"
+homepage = "https://github.com/jshiohaha/anchor-decoder"
+readme = "../../README.md"
+keywords = ["solana", "anchor", "decoder"]
+categories = ["encoding", "development-tools", "parser-implementations"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "1.0", features = ["full"] }
+serde_json = "1.0"
+borsh = "0.10.3"
