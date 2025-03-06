@@ -15,7 +15,7 @@ use anchor_decoder::anchor_idl;
 pub const ID: Pubkey = crate::ID;
 ```
 
-You can create separate crates for each program. You can also call the macro multiple times in the same files by using separate modules.
+You can also call the macro multiple times in the same files by using separate modules.
 
 ```rust
 pub mod production {
@@ -30,6 +30,56 @@ pub mod staging {
     #[anchor_idl("./staging.json")]
 
     pub const ID: Pubkey = crate::ID;
+}
+```
+
+## Using Decoders
+
+I recommend creating separate crates for each parser. You can then install and import crates as needed. Assume you have a separate crate called `program_decoder`. You can then use the decoders as follows:
+
+### Decode instructions
+
+```rust
+use program_decoder::{decode_instruction, DecodedInstruction, Instruction1, Instruction2};
+
+let ix: CompiledInstruction = ...;
+let account_keys: Vec<Pubkey> = ...;
+
+match decode_instruction(&ix.data) {
+    // matches the decoded instructions, with or without ix args
+    Some(DecodedInstruction::Instruction1) => {
+        // convert the array of accounts into a map based on IDL definition
+        let accounts_map = Instruction1::map_accounts(account_keys);
+        println!("Instruction1: {:?}", accounts_map);
+    }
+    Some(DecodedInstruction::Instruction2(decoded)) => {
+        let accounts_map = Instruction2::map_accounts(account_keys);
+        // can now access Instruction2 arg fields
+        println!("Instruction2: {:?}, data: {:?}", accounts_map, decoded);
+    }
+    // handle the case when no match arms are found
+    None => {
+        println!("Failed to decode PROgraM1111111111111111111111111 instruction")
+    }
+};
+```
+
+### Decode accounts
+
+```rust
+use program_decoder::{decode_account, DecodedAccount, Account1};
+
+let account_data: Vec<u8> = ...;
+let account_key: Pubkey = ...;
+
+// account decoder shown here, but it works the same for `decode_instruction`
+match decode_account(&account_data) {
+        Some(DecodedAccount::Account1(decoded)) => {
+        // can now access Account1 struct fields
+        println!("Account1: {:?}", decoded);
+    }
+    // handle the case when no match arms are found
+    None => println!("Failed to decode PROgraM1111111111111111111111111 account: {:?}", account_key),
 }
 ```
 
