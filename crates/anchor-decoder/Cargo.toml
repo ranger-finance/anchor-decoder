@@ -1,6 +1,6 @@
 [package]
 name = "anchor-decoder"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "A procedural macro for decoding Anchor program instructions and accounts"
 authors = ["jshiohaha <jlshiohira23@gmail.com>"]
