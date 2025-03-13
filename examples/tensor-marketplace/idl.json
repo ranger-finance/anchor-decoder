@@ -1,0 +1,4511 @@
+{
+  "address": "TCMPhJdwDryooaGtiocG1u3xcYbRpiJzb283XfCZsDp",
+  "metadata": {
+    "name": "marketplace_program",
+    "version": "0.7.1",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "tcomp_noop",
+      "discriminator": [
+        106,
+        162,
+        10,
+        226,
+        132,
+        68,
+        223,
+        21
+      ],
+      "accounts": [
+        {
+          "name": "tcomp_signer",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "event",
+          "type": {
+            "defined": {
+              "name": "TcompEvent"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "edit",
+      "discriminator": [
+        15,
+        183,
+        33,
+        86,
+        87,
+        28,
+        151,
+        145
+      ],
+      "accounts": [
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "marketplace_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "bid",
+      "discriminator": [
+        199,
+        56,
+        85,
+        38,
+        146,
+        243,
+        37,
+        158
+      ],
+      "accounts": [
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "rent_payer",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "bid_id",
+          "type": "pubkey"
+        },
+        {
+          "name": "target",
+          "type": {
+            "defined": {
+              "name": "Target"
+            }
+          }
+        },
+        {
+          "name": "target_id",
+          "type": "pubkey"
+        },
+        {
+          "name": "field",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "Field"
+              }
+            }
+          }
+        },
+        {
+          "name": "field_id",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "quantity",
+          "type": "u32"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel_bid",
+      "discriminator": [
+        40,
+        243,
+        190,
+        217,
+        208,
+        253,
+        86,
+        206
+      ],
+      "accounts": [
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_expired_bid",
+      "discriminator": [
+        83,
+        20,
+        105,
+        67,
+        248,
+        68,
+        104,
+        190
+      ],
+      "accounts": [
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "buy",
+      "discriminator": [
+        102,
+        6,
+        61,
+        18,
+        1,
+        218,
+        235,
+        234
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "cosigner",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "meta_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_shares",
+          "type": "bytes"
+        },
+        {
+          "name": "creator_verified",
+          "type": {
+            "vec": "bool"
+          }
+        },
+        {
+          "name": "seller_fee_basis_points",
+          "type": "u16"
+        },
+        {
+          "name": "max_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy_spl",
+      "discriminator": [
+        65,
+        136,
+        254,
+        255,
+        59,
+        130,
+        234,
+        174
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "fee_vault_ta",
+          "writable": true
+        },
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "payer_source",
+          "writable": true
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "owner_destination",
+          "writable": true
+        },
+        {
+          "name": "currency"
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "taker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "rent_payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "cosigner",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "meta_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_shares",
+          "type": "bytes"
+        },
+        {
+          "name": "creator_verified",
+          "type": {
+            "vec": "bool"
+          }
+        },
+        {
+          "name": "seller_fee_basis_points",
+          "type": "u16"
+        },
+        {
+          "name": "max_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "close_expired_listing",
+      "discriminator": [
+        150,
+        70,
+        13,
+        135,
+        9,
+        204,
+        75,
+        4
+      ],
+      "accounts": [
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "data_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "discriminator": [
+        54,
+        174,
+        193,
+        67,
+        17,
+        41,
+        132,
+        38
+      ],
+      "accounts": [
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "delegate"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "rent_payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "cosigner",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "data_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "delist",
+      "discriminator": [
+        55,
+        136,
+        205,
+        107,
+        107,
+        173,
+        4,
+        31
+      ],
+      "accounts": [
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "data_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_meta_hash",
+      "discriminator": [
+        85,
+        227,
+        202,
+        70,
+        45,
+        215,
+        10,
+        193
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "seller",
+          "writable": true
+        },
+        {
+          "name": "delegate"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "tensorswap_program"
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "meta_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "creator_shares",
+          "type": "bytes"
+        },
+        {
+          "name": "creator_verified",
+          "type": {
+            "vec": "bool"
+          }
+        },
+        {
+          "name": "seller_fee_basis_points",
+          "type": "u16"
+        },
+        {
+          "name": "min_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_full_meta",
+      "discriminator": [
+        242,
+        194,
+        203,
+        225,
+        234,
+        53,
+        10,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "tree_authority"
+        },
+        {
+          "name": "seller",
+          "writable": true
+        },
+        {
+          "name": "delegate"
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "tensorswap_program"
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "meta_args",
+          "type": {
+            "defined": {
+              "name": "TMetadataArgs"
+            }
+          }
+        },
+        {
+          "name": "min_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy_legacy",
+      "discriminator": [
+        68,
+        127,
+        43,
+        8,
+        212,
+        31,
+        249,
+        114
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "buyer_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "list_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "authorization_rules_program",
+          "optional": true
+        },
+        {
+          "name": "token_metadata_program",
+          "optional": true
+        },
+        {
+          "name": "sysvar_instructions",
+          "optional": true
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        },
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy_legacy_spl",
+      "discriminator": [
+        134,
+        94,
+        125,
+        229,
+        24,
+        157,
+        194,
+        199
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "fee_vault_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "currency"
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "owner_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "currency_token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "buyer_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "list_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "authorization_rules_program",
+          "optional": true
+        },
+        {
+          "name": "token_metadata_program",
+          "optional": true
+        },
+        {
+          "name": "sysvar_instructions",
+          "optional": true
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        },
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "close_expired_listing_legacy",
+      "discriminator": [
+        56,
+        16,
+        96,
+        188,
+        55,
+        68,
+        250,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "owner"
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "owner_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "list_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "authorization_rules_program",
+          "optional": true
+        },
+        {
+          "name": "token_metadata_program",
+          "optional": true
+        },
+        {
+          "name": "sysvar_instructions",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "delist_legacy",
+      "discriminator": [
+        88,
+        35,
+        231,
+        184,
+        110,
+        218,
+        149,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "owner_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "list_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "authorization_rules_program",
+          "optional": true
+        },
+        {
+          "name": "token_metadata_program",
+          "optional": true
+        },
+        {
+          "name": "sysvar_instructions",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "list_legacy",
+      "discriminator": [
+        6,
+        110,
+        255,
+        18,
+        16,
+        36,
+        8,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "owner_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "list_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "authorization_rules_program",
+          "optional": true
+        },
+        {
+          "name": "token_metadata_program",
+          "optional": true
+        },
+        {
+          "name": "sysvar_instructions",
+          "optional": true
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_legacy",
+      "discriminator": [
+        188,
+        35,
+        116,
+        108,
+        0,
+        233,
+        237,
+        201
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist",
+          "optional": true
+        },
+        {
+          "name": "seller_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "edition"
+        },
+        {
+          "name": "seller_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "owner_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "pnft_shared",
+          "accounts": [
+            {
+              "name": "token_metadata_program",
+              "optional": true
+            },
+            {
+              "name": "sysvar_instructions",
+              "optional": true
+            },
+            {
+              "name": "authorization_rules_program",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "name": "bid_ta",
+          "docs": [
+            "Implicitly checked via transfer. Will fail if wrong account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "bid_token_record",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "authorization_rules",
+          "optional": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "escrow_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "mint_proof",
+          "docs": [
+            "intentionally not deserializing, it would be dummy in the case of VOC/FVC based verification"
+          ],
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "min_amount",
+          "type": "u64"
+        },
+        {
+          "name": "optional_royalty_pct",
+          "type": {
+            "option": "u16"
+          }
+        },
+        {
+          "name": "rules_acc_present",
+          "type": "bool"
+        },
+        {
+          "name": "authorization_data",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "AuthorizationDataLocal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy_t22",
+      "discriminator": [
+        81,
+        98,
+        227,
+        171,
+        201,
+        105,
+        180,
+        216
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "buy_t22_spl",
+      "discriminator": [
+        102,
+        21,
+        163,
+        39,
+        94,
+        39,
+        122,
+        94
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "fee_vault_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "T22 asset mint."
+          ]
+        },
+        {
+          "name": "currency",
+          "docs": [
+            "SPL token mint of the currency."
+          ]
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "owner_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "taker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "currency_token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_expired_listing_t22",
+      "discriminator": [
+        69,
+        2,
+        190,
+        122,
+        144,
+        119,
+        122,
+        220
+      ],
+      "accounts": [
+        {
+          "name": "owner"
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delist_t22",
+      "discriminator": [
+        216,
+        72,
+        73,
+        18,
+        204,
+        82,
+        123,
+        26
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "list_t22",
+      "discriminator": [
+        9,
+        117,
+        93,
+        230,
+        221,
+        4,
+        199,
+        212
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_t22",
+      "discriminator": [
+        18,
+        250,
+        113,
+        242,
+        31,
+        244,
+        19,
+        150
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist"
+        },
+        {
+          "name": "seller_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "escrow_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "mint_proof",
+          "docs": [
+            "intentionally not deserializing, it would be dummy in the case of VOC/FVC based verification"
+          ]
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "min_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "buy_wns",
+      "discriminator": [
+        168,
+        43,
+        179,
+        217,
+        44,
+        59,
+        35,
+        244
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "buy_wns_spl",
+      "discriminator": [
+        113,
+        137,
+        57,
+        23,
+        186,
+        196,
+        217,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "fee_vault_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "buyer_ta",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "WNS asset mint."
+          ]
+        },
+        {
+          "name": "currency",
+          "docs": [
+            "SPL token mint of the currency."
+          ]
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "owner_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "taker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker_currency_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "currency_token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "distribution_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_expired_listing_wns",
+      "discriminator": [
+        222,
+        31,
+        183,
+        134,
+        230,
+        207,
+        7,
+        132
+      ],
+      "accounts": [
+        {
+          "name": "owner"
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delist_wns",
+      "discriminator": [
+        172,
+        171,
+        57,
+        16,
+        74,
+        158,
+        32,
+        57
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "list_wns",
+      "discriminator": [
+        23,
+        202,
+        102,
+        138,
+        255,
+        190,
+        39,
+        196
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "list_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "currency",
+          "docs": [
+            "SPL token mint of the currency."
+          ],
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_wns",
+      "discriminator": [
+        88,
+        5,
+        122,
+        88,
+        250,
+        139,
+        35,
+        216
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist"
+        },
+        {
+          "name": "seller_ta",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner_ta",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "escrow_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "mint_proof",
+          "docs": [
+            "intentionally not deserializing, it would be dummy in the case of VOC/FVC based verification"
+          ]
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "approve",
+          "writable": true
+        },
+        {
+          "name": "distribution",
+          "writable": true
+        },
+        {
+          "name": "wns_program"
+        },
+        {
+          "name": "distribution_program"
+        },
+        {
+          "name": "extra_metas"
+        }
+      ],
+      "args": [
+        {
+          "name": "min_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "buy_core",
+      "discriminator": [
+        169,
+        227,
+        87,
+        255,
+        76,
+        86,
+        255,
+        25
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "cosigner",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "buy_core_spl",
+      "discriminator": [
+        234,
+        28,
+        37,
+        122,
+        114,
+        239,
+        233,
+        208
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "fee_vault_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer"
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "currency"
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "owner_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer_currency_ta",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "taker_broker_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker_ta",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "docs": [
+            "Token Program used for the currency."
+          ]
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "max_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_expired_listing_core",
+      "discriminator": [
+        89,
+        171,
+        78,
+        80,
+        74,
+        188,
+        63,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delist_core",
+      "discriminator": [
+        56,
+        24,
+        231,
+        2,
+        227,
+        19,
+        14,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "list_core",
+      "discriminator": [
+        173,
+        76,
+        167,
+        125,
+        118,
+        71,
+        1,
+        153
+      ],
+      "accounts": [
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "list_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "expire_in_sec",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "private_taker",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "maker_broker",
+          "type": {
+            "option": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "take_bid_core",
+      "discriminator": [
+        250,
+        41,
+        248,
+        20,
+        61,
+        161,
+        27,
+        141
+      ],
+      "accounts": [
+        {
+          "name": "fee_vault",
+          "writable": true
+        },
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bid_state",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "taker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "maker_broker",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "shared_escrow",
+          "writable": true
+        },
+        {
+          "name": "whitelist"
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "collection",
+          "optional": true
+        },
+        {
+          "name": "mpl_core_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "marketplace_program"
+        },
+        {
+          "name": "escrow_program"
+        },
+        {
+          "name": "cosigner",
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "mint_proof",
+          "docs": [
+            "intentionally not deserializing, it would be dummy in the case of VOC/FVC based verification"
+          ]
+        },
+        {
+          "name": "rent_destination",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "min_amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ListState",
+      "discriminator": [
+        78,
+        242,
+        89,
+        138,
+        161,
+        221,
+        176,
+        75
+      ]
+    },
+    {
+      "name": "AssetListState",
+      "discriminator": [
+        65,
+        195,
+        176,
+        188,
+        72,
+        18,
+        65,
+        77
+      ]
+    },
+    {
+      "name": "BidState",
+      "discriminator": [
+        155,
+        197,
+        5,
+        97,
+        189,
+        60,
+        8,
+        183
+      ]
+    },
+    {
+      "name": "BidTa",
+      "discriminator": [
+        186,
+        230,
+        110,
+        26,
+        235,
+        24,
+        211,
+        156
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6100,
+      "name": "ArithmeticError",
+      "msg": "arithmetic error"
+    },
+    {
+      "code": 6101,
+      "name": "ExpiryTooLarge",
+      "msg": "expiry too large"
+    },
+    {
+      "code": 6102,
+      "name": "BadOwner",
+      "msg": "bad owner"
+    },
+    {
+      "code": 6103,
+      "name": "BadListState",
+      "msg": "bad list state"
+    },
+    {
+      "code": 6104,
+      "name": "BadRoyaltiesPct",
+      "msg": "royalties pct must be between 0 and 100"
+    },
+    {
+      "code": 6105,
+      "name": "PriceMismatch",
+      "msg": "price mismatch"
+    },
+    {
+      "code": 6106,
+      "name": "CreatorMismatch",
+      "msg": "creator mismatch"
+    },
+    {
+      "code": 6107,
+      "name": "InsufficientBalance",
+      "msg": "insufficient balance"
+    },
+    {
+      "code": 6108,
+      "name": "BidExpired",
+      "msg": "bid has expired"
+    },
+    {
+      "code": 6109,
+      "name": "TakerNotAllowed",
+      "msg": "taker not allowed"
+    },
+    {
+      "code": 6110,
+      "name": "BadBidField",
+      "msg": "cannot pass bid field"
+    },
+    {
+      "code": 6111,
+      "name": "BidNotYetExpired",
+      "msg": "bid not yet expired"
+    },
+    {
+      "code": 6112,
+      "name": "BadMargin",
+      "msg": "bad margin"
+    },
+    {
+      "code": 6113,
+      "name": "WrongIxForBidTarget",
+      "msg": "wrong ix for bid target called"
+    },
+    {
+      "code": 6114,
+      "name": "WrongTargetId",
+      "msg": "wrong target id"
+    },
+    {
+      "code": 6115,
+      "name": "MissingFvc",
+      "msg": "creator array missing first verified creator"
+    },
+    {
+      "code": 6116,
+      "name": "MissingCollection",
+      "msg": "metadata missing collection"
+    },
+    {
+      "code": 6117,
+      "name": "CannotModifyTarget",
+      "msg": "cannot modify bid target, create a new bid"
+    },
+    {
+      "code": 6118,
+      "name": "TargetIdMustEqualBidId",
+      "msg": "target id and bid id must be the same for single bids"
+    },
+    {
+      "code": 6119,
+      "name": "CurrencyNotYetEnabled",
+      "msg": "currency not yet enabled"
+    },
+    {
+      "code": 6120,
+      "name": "MakerBrokerNotYetEnabled",
+      "msg": "maker broker not yet enabled"
+    },
+    {
+      "code": 6121,
+      "name": "OptionalRoyaltiesNotYetEnabled",
+      "msg": "optional royalties not yet enabled"
+    },
+    {
+      "code": 6122,
+      "name": "WrongStateVersion",
+      "msg": "wrong state version"
+    },
+    {
+      "code": 6123,
+      "name": "WrongBidFieldId",
+      "msg": "wrong field id"
+    },
+    {
+      "code": 6124,
+      "name": "BrokerMismatch",
+      "msg": "broker mismatch"
+    },
+    {
+      "code": 6125,
+      "name": "AssetIdMismatch",
+      "msg": "asset id mismatch"
+    },
+    {
+      "code": 6126,
+      "name": "ListingExpired",
+      "msg": "listing has expired"
+    },
+    {
+      "code": 6127,
+      "name": "ListingNotYetExpired",
+      "msg": "listing not yet expired"
+    },
+    {
+      "code": 6128,
+      "name": "BadQuantity",
+      "msg": "bad quantity passed in"
+    },
+    {
+      "code": 6129,
+      "name": "BidFullyFilled",
+      "msg": "bid fully filled"
+    },
+    {
+      "code": 6130,
+      "name": "BadWhitelist",
+      "msg": "bad whitelist"
+    },
+    {
+      "code": 6131,
+      "name": "ForbiddenCollection",
+      "msg": "forbidden collection"
+    },
+    {
+      "code": 6132,
+      "name": "BadCosigner",
+      "msg": "bad cosigner"
+    },
+    {
+      "code": 6133,
+      "name": "BadMintProof",
+      "msg": "bad mint proof"
+    },
+    {
+      "code": 6134,
+      "name": "CurrencyMismatch",
+      "msg": "Currency mismatch"
+    },
+    {
+      "code": 6135,
+      "name": "BidBalanceNotEmptied",
+      "msg": "The bid balance was not emptied"
+    },
+    {
+      "code": 6136,
+      "name": "BadRentDest",
+      "msg": "Bad rent dest."
+    },
+    {
+      "code": 6137,
+      "name": "CurrencyNotYetWhitelisted",
+      "msg": "currency not yet whitelisted"
+    },
+    {
+      "code": 6138,
+      "name": "MakerBrokerNotYetWhitelisted",
+      "msg": "maker broker not yet whitelisted"
+    },
+    {
+      "code": 6139,
+      "name": "WrongTokenRecordDerivation",
+      "msg": "token record derivation is wrong"
+    },
+    {
+      "code": 6140,
+      "name": "InvalidFeeAccount",
+      "msg": "invalid fee account"
+    },
+    {
+      "code": 6141,
+      "name": "InsufficientRemainingAccounts",
+      "msg": "insufficient remaining accounts"
+    },
+    {
+      "code": 6142,
+      "name": "MissingBroker",
+      "msg": "missing broker account"
+    },
+    {
+      "code": 6143,
+      "name": "MissingBrokerTokenAccount",
+      "msg": "missing broker token account"
+    },
+    {
+      "code": 6144,
+      "name": "InvalidTokenAccount",
+      "msg": "invalid token account"
+    },
+    {
+      "code": 6145,
+      "name": "MissingCreatorATA",
+      "msg": "missing creator ATA"
+    },
+    {
+      "code": 6146,
+      "name": "MissingWhitelistMethod",
+      "msg": "No whitelist method provided"
+    },
+    {
+      "code": 6147,
+      "name": "EditionDataEmpty",
+      "msg": "Edition data is empty"
+    }
+  ],
+  "types": [
+    {
+      "name": "TUses",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "use_method",
+            "type": {
+              "defined": {
+                "name": "TUseMethod"
+              }
+            }
+          },
+          {
+            "name": "remaining",
+            "type": "u64"
+          },
+          {
+            "name": "total",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TCollection",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "verified",
+            "type": "bool"
+          },
+          {
+            "name": "key",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TMetadataArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "docs": [
+              "The name of the asset"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "docs": [
+              "The symbol for the asset"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "docs": [
+              "URI pointing to JSON representing the asset"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "seller_fee_basis_points",
+            "docs": [
+              "Royalty basis points that goes to creators in secondary sales (0-10000)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "primary_sale_happened",
+            "type": "bool"
+          },
+          {
+            "name": "is_mutable",
+            "type": "bool"
+          },
+          {
+            "name": "edition_nonce",
+            "docs": [
+              "nonce for easy calculation of editions, if present"
+            ],
+            "type": {
+              "option": "u8"
+            }
+          },
+          {
+            "name": "token_standard",
+            "docs": [
+              "Since we cannot easily change Metadata, we add the new DataV2 fields here at the end."
+            ],
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "TTokenStandard"
+                }
+              }
+            }
+          },
+          {
+            "name": "collection",
+            "docs": [
+              "Collection"
+            ],
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "TCollection"
+                }
+              }
+            }
+          },
+          {
+            "name": "uses",
+            "docs": [
+              "Uses"
+            ],
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "TUses"
+                }
+              }
+            }
+          },
+          {
+            "name": "token_program_version",
+            "type": {
+              "defined": {
+                "name": "TTokenProgramVersion"
+              }
+            }
+          },
+          {
+            "name": "creator_shares",
+            "type": "bytes"
+          },
+          {
+            "name": "creator_verified",
+            "type": {
+              "vec": "bool"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MakeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "maker",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_id",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "target",
+            "type": {
+              "defined": {
+                "name": "Target"
+              }
+            }
+          },
+          {
+            "name": "target_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "field",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "Field"
+                }
+              }
+            }
+          },
+          {
+            "name": "field_id",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "quantity",
+            "type": "u32"
+          },
+          {
+            "name": "currency",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "expiry",
+            "type": "i64"
+          },
+          {
+            "name": "private_taker",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "asset_id",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TakeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "taker",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_id",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "target",
+            "type": {
+              "defined": {
+                "name": "Target"
+              }
+            }
+          },
+          {
+            "name": "target_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "field",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "Field"
+                }
+              }
+            }
+          },
+          {
+            "name": "field_id",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "quantity",
+            "type": "u32"
+          },
+          {
+            "name": "tcomp_fee",
+            "type": "u64"
+          },
+          {
+            "name": "taker_broker_fee",
+            "type": "u64"
+          },
+          {
+            "name": "maker_broker_fee",
+            "type": "u64"
+          },
+          {
+            "name": "creator_fee",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "asset_id",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "AuthorizationDataLocal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "payload",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "TaggedPayload"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TaggedPayload",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "payload",
+            "type": {
+              "defined": {
+                "name": "PayloadTypeLocal"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "SeedsVecLocal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "seeds",
+            "docs": [
+              "The vector of derivation seeds."
+            ],
+            "type": {
+              "vec": "bytes"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProofInfoLocal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "proof",
+            "docs": [
+              "The merkle proof."
+            ],
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  32
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TTokenProgramVersion",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Original"
+          },
+          {
+            "name": "Token2022"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TTokenStandard",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "NonFungible"
+          },
+          {
+            "name": "FungibleAsset"
+          },
+          {
+            "name": "Fungible"
+          },
+          {
+            "name": "NonFungibleEdition"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TUseMethod",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Burn"
+          },
+          {
+            "name": "Multiple"
+          },
+          {
+            "name": "Single"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TcompEvent",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Maker",
+            "fields": [
+              {
+                "defined": {
+                  "name": "MakeEvent"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Taker",
+            "fields": [
+              {
+                "defined": {
+                  "name": "TakeEvent"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "PayloadTypeLocal",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pubkey",
+            "fields": [
+              "pubkey"
+            ]
+          },
+          {
+            "name": "Seeds",
+            "fields": [
+              {
+                "defined": {
+                  "name": "SeedsVecLocal"
+                }
+              }
+            ]
+          },
+          {
+            "name": "MerkleProof",
+            "fields": [
+              {
+                "defined": {
+                  "name": "ProofInfoLocal"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Number",
+            "fields": [
+              "u64"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Target",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "AssetId"
+          },
+          {
+            "name": "Whitelist"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Field",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Name"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ListState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": {
+              "array": [
+                "u8",
+                1
+              ]
+            }
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "asset_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "expiry",
+            "type": "i64"
+          },
+          {
+            "name": "private_taker",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "maker_broker",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "rent_payer",
+            "docs": [
+              "Owner is the rent payer when this is None.",
+              "Default Pubkey represents a None value."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "cosigner",
+            "docs": [
+              "Cosigner",
+              "Default Pubkey represents a None value."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "reserved1",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "AssetListState",
+      "type": {
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "BidState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": {
+              "array": [
+                "u8",
+                1
+              ]
+            }
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_id",
+            "docs": [
+              "Randomly picked pubkey used in bid seeds. To avoid dangling bids can use assetId here."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "target",
+            "type": {
+              "defined": {
+                "name": "Target"
+              }
+            }
+          },
+          {
+            "name": "target_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "field",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "Field"
+                }
+              }
+            }
+          },
+          {
+            "name": "field_id",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "quantity",
+            "type": "u32"
+          },
+          {
+            "name": "filled_quantity",
+            "type": "u32"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "expiry",
+            "type": "i64"
+          },
+          {
+            "name": "private_taker",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "maker_broker",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "margin",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
+            "name": "cosigner",
+            "docs": [
+              "Cosigner",
+              "Default Pubkey represents a None value."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "rent_payer",
+            "docs": [
+              "Owner is the rent payer when this is None.",
+              "Default Pubkey represents a None value."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "reserved1",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "reserved2",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "BidTa",
+      "type": {
+        "kind": "struct"
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "CURRENT_TCOMP_VERSION",
+      "type": "u8",
+      "value": "1"
+    },
+    {
+      "name": "MAX_EXPIRY_SEC",
+      "type": "i64",
+      "value": "31536000"
+    }
+  ]
+}

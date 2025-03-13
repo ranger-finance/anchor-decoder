@@ -128,8 +128,7 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                     match kind {
                         "struct" => {
                             // Process struct definitions.
-                            if let Some(fields) = type_info.get("fields").and_then(|v| v.as_array())
-                            {
+                            let field_defs = if let Some(fields) = type_info.get("fields").and_then(|v| v.as_array()) {
                                 let mut field_defs = Vec::new();
                                 for field in fields {
                                     if let (Some(field_name), Some(field_type)) = (
@@ -146,18 +145,23 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                                         });
                                     }
                                 }
-                                struct_defs.push(quote! {
-                                    #[derive(Debug, BorshSerialize, BorshDeserialize)]
-                                    pub struct #type_ident {
-                                        #( #field_defs )*
+                                field_defs
+                            } else {
+                                // Handle empty struct (no fields property)
+                                Vec::new()
+                            };
+                            
+                            struct_defs.push(quote! {
+                                #[derive(Debug, BorshSerialize, BorshDeserialize)]
+                                pub struct #type_ident {
+                                    #( #field_defs )*
+                                }
+                                impl #type_ident {
+                                    pub fn decode(data: &[u8]) -> Result<Self, ::std::io::Error> {
+                                        <Self as BorshDeserialize>::try_from_slice(data)
                                     }
-                                    impl #type_ident {
-                                        pub fn decode(data: &[u8]) -> Result<Self, ::std::io::Error> {
-                                            <Self as BorshDeserialize>::try_from_slice(data)
-                                        }
-                                    }
-                                });
-                            }
+                                }
+                            });
                         }
                         "enum" => {
                             // Process enum definitions.

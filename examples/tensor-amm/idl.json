@@ -1,0 +1,3293 @@
+{
+    "address": "TAMM6ub33ij1mbetoMyVBLeKY5iP41i4UPUJQGkhfsg",
+    "metadata": {
+        "name": "amm_program",
+        "version": "1.0.0",
+        "spec": "0.1.0"
+    },
+    "docs": ["Program entrypoint"],
+    "instructions": [
+        {
+            "name": "tamm_noop",
+            "docs": [
+                "Self-cpi logging instruction; can only be called internally by the program itself."
+            ],
+            "discriminator": [31, 162, 228, 158, 153, 160, 198, 182],
+            "accounts": [
+                {
+                    "name": "pool"
+                }
+            ],
+            "args": [
+                {
+                    "name": "event",
+                    "type": {
+                        "defined": {
+                            "name": "TAmmEvent"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "create_pool",
+            "docs": ["Create a new pool."],
+            "discriminator": [233, 146, 209, 142, 207, 104, 64, 188],
+            "accounts": [
+                {
+                    "name": "rent_payer",
+                    "docs": [
+                        "The account that pays for the rent to open the pool. This will be stored on the pool",
+                        "so it can be refunded when the pool is closed."
+                    ],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "owner",
+                    "docs": [
+                        "The owner of the pool will be stored and used to control permissioned pool instructions."
+                    ],
+                    "signer": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool state account."],
+                    "writable": true
+                },
+                {
+                    "name": "whitelist",
+                    "docs": [
+                        "The whitelist that gatekeeps which NFTs can be bought or sold with this pool."
+                    ]
+                },
+                {
+                    "name": "shared_escrow",
+                    "optional": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "args",
+                    "type": {
+                        "defined": {
+                            "name": "CreatePoolArgs"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "edit_pool",
+            "docs": ["Edit an existing pool."],
+            "discriminator": [50, 174, 34, 36, 3, 166, 29, 204],
+            "accounts": [
+                {
+                    "name": "owner",
+                    "docs": [
+                        "The owner of the pool--must sign to edit the pool."
+                    ],
+                    "signer": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool to edit."],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "args",
+                    "type": {
+                        "defined": {
+                            "name": "EditPoolArgs"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "close_pool",
+            "docs": [
+                "Close a pool if it has no NFTs and is not attached to a shared escrow."
+            ],
+            "discriminator": [140, 189, 209, 23, 239, 62, 239, 11],
+            "accounts": [
+                {
+                    "name": "rent_payer",
+                    "docs": ["The rent payer to refund pool rent to."],
+                    "writable": true
+                },
+                {
+                    "name": "owner",
+                    "docs": ["The owner must sign to close the pool."],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool to close."],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "close_expired_pool",
+            "docs": ["Permissionlessly close an expired pool."],
+            "discriminator": [108, 212, 233, 53, 132, 83, 63, 219],
+            "accounts": [
+                {
+                    "name": "rent_payer",
+                    "docs": ["The rent payer to refund pool rent to."],
+                    "writable": true
+                },
+                {
+                    "name": "owner",
+                    "docs": [
+                        "The owner account must be specified and match the account stored in the pool but does not have to sign",
+                        "for expired pools."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool to close."],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "deposit_sol",
+            "docs": ["Deposit SOL into a Token or Trade pool."],
+            "discriminator": [108, 81, 78, 117, 125, 155, 56, 200],
+            "accounts": [
+                {
+                    "name": "owner",
+                    "docs": [
+                        "The owner of the pool--must sign to deposit SOL."
+                    ],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool to deposit the SOL into."],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "lamports",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "withdraw_sol",
+            "docs": ["Withdraw SOL from a Token or Trade pool."],
+            "discriminator": [145, 131, 74, 136, 65, 137, 42, 38],
+            "accounts": [
+                {
+                    "name": "owner",
+                    "docs": ["The owner of the pool and will receive the SOL."],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "pool",
+                    "docs": ["The pool from which the SOL will be withdrawn."],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "lamports",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "deposit_nft",
+            "docs": [
+                "Deposit a Metaplex legacy NFT or pNFT into a NFT or Trade pool."
+            ],
+            "discriminator": [93, 226, 132, 166, 141, 9, 48, 101],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "mplx",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        },
+                        {
+                            "name": "metadata",
+                            "docs": [
+                                "The Token Metadata metadata account of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "edition",
+                            "docs": [
+                                "The Token Metadata edition account of the NFT."
+                            ]
+                        },
+                        {
+                            "name": "user_token_record",
+                            "docs": [
+                                "The Token Metadata source token record account of the NFT."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "pool_token_record",
+                            "docs": [
+                                "The Token Metadata token record for the destination."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "token_metadata_program",
+                            "docs": ["The Token Metadata program account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "sysvar_instructions",
+                            "docs": ["The sysvar instructions account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules",
+                            "docs": [
+                                "The Metaplex Token Authority Rules account that stores royalty enforcement rules."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules_program",
+                            "docs": [
+                                "The Metaplex Token Authority Rules program account."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The token account of the owner, where the NFT will be transferred from."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The token account of the pool, where the NFT will be escrowed."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The SPL Token program for the Mint and ATAs."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "authorization_data",
+                    "type": {
+                        "option": {
+                            "defined": {
+                                "name": "AuthorizationDataLocal"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "withdraw_nft",
+            "docs": [
+                "Withdraw a Metaplex legacy NFT or pNFT from a NFT or Trade pool."
+            ],
+            "discriminator": [142, 181, 191, 149, 82, 175, 216, 100],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "mplx",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        },
+                        {
+                            "name": "metadata",
+                            "docs": [
+                                "The Token Metadata metadata account of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "edition",
+                            "docs": [
+                                "The Token Metadata edition account of the NFT."
+                            ]
+                        },
+                        {
+                            "name": "user_token_record",
+                            "docs": [
+                                "The Token Metadata source token record account of the NFT."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "pool_token_record",
+                            "docs": [
+                                "The Token Metadata token record for the destination."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "token_metadata_program",
+                            "docs": ["The Token Metadata program account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "sysvar_instructions",
+                            "docs": ["The sysvar instructions account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules",
+                            "docs": [
+                                "The Metaplex Token Authority Rules account that stores royalty enforcement rules."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules_program",
+                            "docs": [
+                                "The Metaplex Token Authority Rules program account."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The TA of the owner, where the NFT will be transferred to as a result of this action."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The TA of the pool, where the NFT token is escrowed."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The SPL Token program for the Mint and ATAs."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "authorization_data",
+                    "type": {
+                        "option": {
+                            "defined": {
+                                "name": "AuthorizationDataLocal"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "buy_nft",
+            "docs": [
+                "Buy a Metaplex legacy NFT or pNFT from a NFT or Trade pool."
+            ],
+            "discriminator": [96, 0, 28, 190, 49, 107, 83, 222],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "mplx",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        },
+                        {
+                            "name": "metadata",
+                            "docs": [
+                                "The Token Metadata metadata account of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "edition",
+                            "docs": [
+                                "The Token Metadata edition account of the NFT."
+                            ]
+                        },
+                        {
+                            "name": "user_token_record",
+                            "docs": [
+                                "The Token Metadata source token record account of the NFT."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "pool_token_record",
+                            "docs": [
+                                "The Token Metadata token record for the destination."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "token_metadata_program",
+                            "docs": ["The Token Metadata program account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "sysvar_instructions",
+                            "docs": ["The sysvar instructions account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules",
+                            "docs": [
+                                "The Metaplex Token Authority Rules account that stores royalty enforcement rules."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules_program",
+                            "docs": [
+                                "The Metaplex Token Authority Rules program account."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The TA of the buyer, where the NFT will be transferred."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": ["The TA of the pool, where the NFT is held."],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["Either the legacy token program or token-2022."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "max_amount",
+                    "type": "u64"
+                },
+                {
+                    "name": "authorization_data",
+                    "type": {
+                        "option": {
+                            "defined": {
+                                "name": "AuthorizationDataLocal"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "optional_royalty_pct",
+                    "type": {
+                        "option": "u16"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_token_pool",
+            "docs": ["Sell a Metaplex legacy NFT or pNFT into a Token pool."],
+            "discriminator": [57, 44, 192, 48, 83, 8, 107, 48],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "mplx",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        },
+                        {
+                            "name": "metadata",
+                            "docs": [
+                                "The Token Metadata metadata account of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "edition",
+                            "docs": [
+                                "The Token Metadata edition account of the NFT."
+                            ]
+                        },
+                        {
+                            "name": "user_token_record",
+                            "docs": [
+                                "The Token Metadata source token record account of the NFT."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "pool_token_record",
+                            "docs": [
+                                "The Token Metadata token record for the destination."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "token_metadata_program",
+                            "docs": ["The Token Metadata program account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "sysvar_instructions",
+                            "docs": ["The sysvar instructions account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules",
+                            "docs": [
+                                "The Metaplex Token Authority Rules account that stores royalty enforcement rules."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules_program",
+                            "docs": [
+                                "The Metaplex Token Authority Rules program account."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The token account of the NFT for the seller's wallet."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The TA of the owner, where the NFT will be transferred to as a result of this sale."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The TA of the pool, where the NFT token is temporarily escrowed as a result of this sale."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_token_record",
+                    "docs": [
+                        "The Token Metadata owner/buyer token record account of the NFT."
+                    ],
+                    "writable": true,
+                    "optional": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["Either the legacy token program or token-2022."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                },
+                {
+                    "name": "authorization_data",
+                    "type": {
+                        "option": {
+                            "defined": {
+                                "name": "AuthorizationDataLocal"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "optional_royalty_pct",
+                    "type": {
+                        "option": "u16"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_trade_pool",
+            "docs": ["Sell a Metaplex legacy NFT or pNFT into a Trade pool."],
+            "discriminator": [131, 82, 125, 77, 13, 157, 36, 90],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "mplx",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        },
+                        {
+                            "name": "metadata",
+                            "docs": [
+                                "The Token Metadata metadata account of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "edition",
+                            "docs": [
+                                "The Token Metadata edition account of the NFT."
+                            ]
+                        },
+                        {
+                            "name": "user_token_record",
+                            "docs": [
+                                "The Token Metadata source token record account of the NFT."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "pool_token_record",
+                            "docs": [
+                                "The Token Metadata token record for the destination."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "token_metadata_program",
+                            "docs": ["The Token Metadata program account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "sysvar_instructions",
+                            "docs": ["The sysvar instructions account."],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules",
+                            "docs": [
+                                "The Metaplex Token Authority Rules account that stores royalty enforcement rules."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "authorization_rules_program",
+                            "docs": [
+                                "The Metaplex Token Authority Rules program account."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The token account of the seller, where the NFT will be transferred from."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The ATA of the pool, where the NFT will be transferred to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["Either the legacy token program or token-2022."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                },
+                {
+                    "name": "authorization_data",
+                    "type": {
+                        "option": {
+                            "defined": {
+                                "name": "AuthorizationDataLocal"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "optional_royalty_pct",
+                    "type": {
+                        "option": "u16"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "deposit_nft_core",
+            "docs": ["Deposit a MPL Core asset into a NFT or Trade pool."],
+            "discriminator": [73, 21, 4, 64, 161, 214, 248, 77],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "core",
+                    "accounts": [
+                        {
+                            "name": "asset",
+                            "docs": ["The MPL core asset account."],
+                            "writable": true
+                        },
+                        {
+                            "name": "collection",
+                            "optional": true
+                        },
+                        {
+                            "name": "mpl_core_program",
+                            "docs": ["The MPL Core program."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "withdraw_nft_core",
+            "docs": ["Withdraw a MPL Core asset from a NFT or Trade pool."],
+            "discriminator": [112, 131, 239, 116, 187, 149, 114, 145],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "core",
+                    "accounts": [
+                        {
+                            "name": "asset",
+                            "docs": ["The MPL core asset account."],
+                            "writable": true
+                        },
+                        {
+                            "name": "collection",
+                            "optional": true
+                        },
+                        {
+                            "name": "mpl_core_program",
+                            "docs": ["The MPL Core program."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT receipt account denoting that an NFT has been deposited into this pool."
+                    ],
+                    "writable": true
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "buy_nft_core",
+            "docs": ["Buy a MPL Core asset from a NFT or Trade pool."],
+            "discriminator": [163, 102, 58, 107, 184, 4, 169, 121],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "core",
+                    "accounts": [
+                        {
+                            "name": "asset",
+                            "docs": ["The MPL core asset account."],
+                            "writable": true
+                        },
+                        {
+                            "name": "collection",
+                            "optional": true
+                        },
+                        {
+                            "name": "mpl_core_program",
+                            "docs": ["The MPL Core program."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "max_amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_token_pool_core",
+            "docs": ["Sell a MPL Core asset into a Token pool."],
+            "discriminator": [137, 227, 197, 122, 245, 229, 56, 205],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "core",
+                    "accounts": [
+                        {
+                            "name": "asset",
+                            "docs": ["The MPL core asset account."],
+                            "writable": true
+                        },
+                        {
+                            "name": "collection",
+                            "optional": true
+                        },
+                        {
+                            "name": "mpl_core_program",
+                            "docs": ["The MPL Core program."]
+                        }
+                    ]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_trade_pool_core",
+            "docs": ["Sell a MPL Core asset into a Trade pool."],
+            "discriminator": [37, 205, 141, 53, 86, 245, 45, 78],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "core",
+                    "accounts": [
+                        {
+                            "name": "asset",
+                            "docs": ["The MPL core asset account."],
+                            "writable": true
+                        },
+                        {
+                            "name": "collection",
+                            "optional": true
+                        },
+                        {
+                            "name": "mpl_core_program",
+                            "docs": ["The MPL Core program."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "deposit_nft_t22",
+            "docs": ["Deposit a Token22 NFT into a NFT or Trade pool."],
+            "discriminator": [208, 34, 6, 147, 95, 218, 49, 160],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "t22",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The TA of the owner, where the NFT will be transferred from."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The TA of the pool, where the NFT will be escrowed."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The SPL Token program for the Mint and ATAs."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "withdraw_nft_t22",
+            "docs": ["Withdraw a Token22 NFT from a NFT or Trade pool."],
+            "discriminator": [112, 55, 80, 231, 181, 190, 92, 12],
+            "accounts": [
+                {
+                    "name": "transfer",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": ["The owner of the pool and the NFT."],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The pool the NFT is being transferred to/from."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist that gatekeeps which NFTs can be deposited into the pool.",
+                                "Must match the whitelist stored in the pool state."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "t22",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The TA of the owner where the NFT will be withdrawn to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The TA of the pool, where the NFT token is escrowed."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The SPL Token program for the Mint and ATAs."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "buy_nft_t22",
+            "docs": ["Buy a Token22 NFT from a NFT or Trade pool."],
+            "discriminator": [155, 219, 126, 245, 170, 199, 51, 79],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "t22",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The TA of the buyer, where the NFT will be transferred."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The TA of the pool, where the NFT will be escrowed."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The SPL Token program for the Mint and ATAs."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "max_amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_token_pool_t22",
+            "docs": ["Sell a Token22 NFT into a Token pool."],
+            "discriminator": [149, 234, 31, 103, 26, 36, 166, 49],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "t22",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        }
+                    ]
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The token account of the NFT for the seller's wallet."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "owner_ta",
+                    "docs": [
+                        "The ATA of the owner, where the NFT will be transferred to as a result of this sale."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The Token 2022 program."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "sell_nft_trade_pool_t22",
+            "docs": ["Sell a Token22 NFT into a Trade pool."],
+            "discriminator": [124, 145, 23, 52, 72, 113, 85, 9],
+            "accounts": [
+                {
+                    "name": "trade",
+                    "accounts": [
+                        {
+                            "name": "owner",
+                            "docs": [
+                                "The owner of the pool and the buyer/recipient of the NFT."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "taker",
+                            "docs": [
+                                "The taker is the user buying or selling the NFT."
+                            ],
+                            "writable": true,
+                            "signer": true
+                        },
+                        {
+                            "name": "rent_payer",
+                            "docs": [
+                                "The original rent payer of the pool--stored on the pool. Used to refund rent in case the pool",
+                                "is auto-closed."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "fee_vault",
+                            "docs": [
+                                "Fee vault account owned by the TFEE program."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "pool",
+                            "docs": [
+                                "The Pool state account that the NFT is being sold into. Stores pool state and config,",
+                                "but is also the owner of any NFTs in the pool, and also escrows any SOL.",
+                                "Any active pool can be specified provided it is a Token type and the NFT passes at least one",
+                                "whitelist condition."
+                            ],
+                            "writable": true
+                        },
+                        {
+                            "name": "whitelist",
+                            "docs": [
+                                "The whitelist account that the pool uses to verify the NFTs being sold into it."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "mint_proof",
+                            "docs": [
+                                "Optional account which must be passed in if the NFT must be verified against a",
+                                "merkle proof condition in the whitelist."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "shared_escrow",
+                            "docs": [
+                                "The shared escrow account for pools that have liquidity in a shared account."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "maker_broker",
+                            "docs": [
+                                "The account that receives the maker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "taker_broker",
+                            "docs": [
+                                "The account that receives the taker broker fee."
+                            ],
+                            "writable": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "cosigner",
+                            "docs": [
+                                "The optional cosigner account that must be passed in if the pool has a cosigner."
+                            ],
+                            "signer": true,
+                            "optional": true
+                        },
+                        {
+                            "name": "amm_program",
+                            "docs": [
+                                "The AMM program account, used for self-cpi logging."
+                            ]
+                        },
+                        {
+                            "name": "escrow_program",
+                            "docs": [
+                                "The escrow program account for shared liquidity pools."
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "name": "native_program"
+                        }
+                    ]
+                },
+                {
+                    "name": "t22",
+                    "accounts": [
+                        {
+                            "name": "mint",
+                            "docs": ["The mint account of the NFT."]
+                        }
+                    ]
+                },
+                {
+                    "name": "nft_receipt",
+                    "docs": [
+                        "The NFT deposit receipt, which ties an NFT to the pool it was deposited to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "taker_ta",
+                    "docs": [
+                        "The token account of the NFT for the seller's wallet."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "pool_ta",
+                    "docs": [
+                        "The ATA of the pool, where the NFT will be transferred to."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "token_program",
+                    "docs": ["The Token 2022 program."]
+                },
+                {
+                    "name": "associated_token_program",
+                    "docs": ["The SPL associated token program."]
+                },
+                {
+                    "name": "system_program",
+                    "docs": ["The Solana system program."]
+                }
+            ],
+            "args": [
+                {
+                    "name": "min_price",
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "AssetDepositReceipt",
+            "discriminator": [147, 18, 99, 58, 249, 8, 196, 221]
+        },
+        {
+            "name": "NftDepositReceipt",
+            "discriminator": [206, 255, 132, 254, 67, 78, 62, 96]
+        },
+        {
+            "name": "Pool",
+            "discriminator": [241, 154, 109, 4, 17, 177, 109, 188]
+        }
+    ],
+    "errors": [
+        {
+            "code": 12000,
+            "name": "WrongWhitelist",
+            "msg": "wrong whitelist"
+        },
+        {
+            "code": 12001,
+            "name": "WrongPoolType",
+            "msg": "operation not permitted on this pool type"
+        },
+        {
+            "code": 12002,
+            "name": "FeesTooHigh",
+            "msg": "fees entered above allowed threshold"
+        },
+        {
+            "code": 12003,
+            "name": "DeltaTooLarge",
+            "msg": "delta too large"
+        },
+        {
+            "code": 12004,
+            "name": "ArithmeticError",
+            "msg": "arithmetic error"
+        },
+        {
+            "code": 12005,
+            "name": "PriceMismatch",
+            "msg": "specified price not within current price"
+        },
+        {
+            "code": 12006,
+            "name": "ExistingNfts",
+            "msg": "cannot close pool with nfts in escrow -- withdraw all before closing"
+        },
+        {
+            "code": 12007,
+            "name": "FeesNotAllowed",
+            "msg": "fees not allowed for non-trade pools"
+        },
+        {
+            "code": 12008,
+            "name": "WrongPoolVersion",
+            "msg": "wrong pool version provided"
+        },
+        {
+            "code": 12009,
+            "name": "BadMintProof",
+            "msg": "bad mint proof account"
+        },
+        {
+            "code": 12010,
+            "name": "WrongCosigner",
+            "msg": "wrong cosigner"
+        },
+        {
+            "code": 12011,
+            "name": "BadSharedEscrow",
+            "msg": "bad shared escrow account"
+        },
+        {
+            "code": 12012,
+            "name": "PoolOnSharedEscrow",
+            "msg": "expected a non-shared escrow pool to be passed in"
+        },
+        {
+            "code": 12013,
+            "name": "CannotUseSharedEscrow",
+            "msg": "cannot use shared escrow in NFT pools"
+        },
+        {
+            "code": 12014,
+            "name": "MaxTakerSellCountExceeded",
+            "msg": "max taker sell count exceeded, pool cannot buy anymore NFTs"
+        },
+        {
+            "code": 12015,
+            "name": "MaxTakerSellCountTooSmall",
+            "msg": "max taker sell count is too small"
+        },
+        {
+            "code": 12016,
+            "name": "StartingPriceTooSmall",
+            "msg": "starting price can't be smaller than 1 lamport"
+        },
+        {
+            "code": 12017,
+            "name": "PoolInsufficientRent",
+            "msg": "Pool must keep minimum rent balance"
+        },
+        {
+            "code": 12018,
+            "name": "WrongRentPayer",
+            "msg": "Wrong rent payer"
+        },
+        {
+            "code": 12019,
+            "name": "ExpiryTooLarge",
+            "msg": "Expiry too large"
+        },
+        {
+            "code": 12020,
+            "name": "ExpiredPool",
+            "msg": "Expired Pool"
+        },
+        {
+            "code": 12021,
+            "name": "PoolNotExpired",
+            "msg": "Pool not expired"
+        },
+        {
+            "code": 12022,
+            "name": "InvalidPoolAmount",
+            "msg": "Invalid pool amount"
+        },
+        {
+            "code": 12023,
+            "name": "WrongMakerBroker",
+            "msg": "Wrong maker broker account"
+        },
+        {
+            "code": 12024,
+            "name": "WrongOwner",
+            "msg": "Wrong owner"
+        },
+        {
+            "code": 12025,
+            "name": "EscrowProgramNotSet",
+            "msg": "Escrow program not set"
+        },
+        {
+            "code": 12026,
+            "name": "MissingMakerBroker",
+            "msg": "Missing maker broker account"
+        },
+        {
+            "code": 12027,
+            "name": "MissingCosigner",
+            "msg": "Missing cosigner account"
+        },
+        {
+            "code": 12028,
+            "name": "InvalidEdition",
+            "msg": "Invalid edition"
+        }
+    ],
+    "types": [
+        {
+            "name": "CreatePoolArgs",
+            "docs": ["Create pool arguments."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "pool_id",
+                        "type": {
+                            "array": ["u8", 32]
+                        }
+                    },
+                    {
+                        "name": "config",
+                        "type": {
+                            "defined": {
+                                "name": "PoolConfig"
+                            }
+                        }
+                    },
+                    {
+                        "name": "currency",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "cosigner",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "maker_broker",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "max_taker_sell_count",
+                        "type": {
+                            "option": "u32"
+                        }
+                    },
+                    {
+                        "name": "expire_in_sec",
+                        "type": {
+                            "option": "u64"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "EditPoolArgs",
+            "docs": ["Edit pool arguments."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "new_config",
+                        "type": {
+                            "option": {
+                                "defined": {
+                                    "name": "EditPoolConfig"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "cosigner",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "maker_broker",
+                        "type": {
+                            "option": "pubkey"
+                        }
+                    },
+                    {
+                        "name": "expire_in_sec",
+                        "type": {
+                            "option": "u64"
+                        }
+                    },
+                    {
+                        "name": "max_taker_sell_count",
+                        "type": {
+                            "option": "u32"
+                        }
+                    },
+                    {
+                        "name": "reset_price_offset",
+                        "type": "bool"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "EditPoolConfig",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "curve_type",
+                        "type": {
+                            "defined": {
+                                "name": "CurveType"
+                            }
+                        }
+                    },
+                    {
+                        "name": "starting_price",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "delta",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "mm_compound_fees",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "mm_fee_bps",
+                        "type": "u16"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "BuySellEvent",
+            "docs": ["Event emitted when a user buys or sells tokens."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "current_price",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "taker_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "mm_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "creators_fee",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PoolConfig",
+            "docs": [
+                "Configuration values for a pool define the type of pool, curve, and other parameters."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "pool_type",
+                        "type": {
+                            "defined": {
+                                "name": "PoolType"
+                            }
+                        }
+                    },
+                    {
+                        "name": "curve_type",
+                        "type": {
+                            "defined": {
+                                "name": "CurveType"
+                            }
+                        }
+                    },
+                    {
+                        "name": "starting_price",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "delta",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "mm_compound_fees",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "mm_fee_bps",
+                        "type": "u16"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PoolStats",
+            "docs": [
+                "Stats for a pool include the number of buys and sells, and the accumulated MM profit."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "taker_sell_count",
+                        "type": "u32"
+                    },
+                    {
+                        "name": "taker_buy_count",
+                        "type": "u32"
+                    },
+                    {
+                        "name": "accumulated_mm_profit",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "AuthorizationDataLocal",
+            "docs": ["Local version of `AuthorizationData` for IDL export."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "payload",
+                        "type": {
+                            "vec": {
+                                "defined": {
+                                    "name": "TaggedPayload"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TaggedPayload",
+            "docs": ["Local version of `TaggedPayload` for IDL export."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "payload",
+                        "type": {
+                            "defined": {
+                                "name": "PayloadTypeLocal"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "SeedsVecLocal",
+            "docs": ["Local version of `SeedsVec` for IDL export."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "seeds",
+                        "docs": ["The vector of derivation seeds."],
+                        "type": {
+                            "vec": "bytes"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ProofInfoLocal",
+            "docs": ["Local version of `ProofInfo` for IDL export."],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "proof",
+                        "docs": ["The merkle proof."],
+                        "type": {
+                            "vec": {
+                                "array": ["u8", 32]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TransferDirection",
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "IntoPool"
+                    },
+                    {
+                        "name": "OutOfPool"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TAmmEvent",
+            "docs": ["Enum for events emitted by the AMM program."],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "BuySellEvent",
+                        "fields": [
+                            {
+                                "defined": {
+                                    "name": "BuySellEvent"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PoolType",
+            "docs": [
+                "Enum representing the different types of pools.",
+                "",
+                "Token pools are single-sided pools that hold SOL and NFTs can be sold into them.",
+                "",
+                "NFT pools are single-sided pools that hold NFTs and NFTs can be purchased from them.",
+                "",
+                "Trade pools are double-sided pools that hold SOL and NFTs and can be used to trade between the two."
+            ],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Token"
+                    },
+                    {
+                        "name": "NFT"
+                    },
+                    {
+                        "name": "Trade"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "CurveType",
+            "docs": [
+                "Enum representing the different types of curves that can be used in a pool.",
+                "",
+                "Linear curves have price offsets that increase or decrease linearly.",
+                "",
+                "Exponential curves have a price offset that increases or decreases exponentially."
+            ],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Linear"
+                    },
+                    {
+                        "name": "Exponential"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Direction",
+            "docs": ["Indicates the direction of a price shift."],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Up"
+                    },
+                    {
+                        "name": "Down"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TakerSide",
+            "docs": ["Indicates the side of the taker."],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Buy"
+                    },
+                    {
+                        "name": "Sell"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PayloadTypeLocal",
+            "docs": ["Local version of `PayloadType` for IDL export."],
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "Pubkey",
+                        "fields": ["pubkey"]
+                    },
+                    {
+                        "name": "Seeds",
+                        "fields": [
+                            {
+                                "defined": {
+                                    "name": "SeedsVecLocal"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "MerkleProof",
+                        "fields": [
+                            {
+                                "defined": {
+                                    "name": "ProofInfoLocal"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Number",
+                        "fields": ["u64"]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "AssetDepositReceipt",
+            "docs": [
+                "Represents Assets deposited into a Trade or NFT pool.",
+                "Seeds: \"nft_receipt\", asset, pool",
+                "Dummy struct to allow Kinobi to generate the PDA seeds.",
+                "This is the deposit receipt for NFT standards that have \"asset\" addresses instead of \"mint\" addresses."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "asset",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "pool",
+                        "type": "pubkey"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "NftDepositReceipt",
+            "docs": [
+                "Represents NFTs deposited into a Trade or NFT pool.",
+                "Seeds: \"nft_receipt\", mint, pool"
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "pool",
+                        "type": "pubkey"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Pool",
+            "docs": [
+                "`Pool` is the main state account in the AMM program and represents the AMM pool where trades can happen.",
+                "`Pool` accounts are Program Derived Addresses derived  from the seeds: `\"pool\"`, `owner`, and `identifier`."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "version",
+                        "docs": ["Pool version, used to control upgrades."],
+                        "type": "u8"
+                    },
+                    {
+                        "name": "bump",
+                        "docs": ["Bump seed for the pool PDA."],
+                        "type": {
+                            "array": ["u8", 1]
+                        }
+                    },
+                    {
+                        "name": "pool_id",
+                        "docs": ["Owner-chosen identifier for the pool"],
+                        "type": {
+                            "array": ["u8", 32]
+                        }
+                    },
+                    {
+                        "name": "created_at",
+                        "docs": [
+                            "Unix timestamp of the pool creation, in seconds."
+                        ],
+                        "type": "i64"
+                    },
+                    {
+                        "name": "updated_at",
+                        "docs": [
+                            "Unix timestamp of the last time the pool has been updated, in seconds."
+                        ],
+                        "type": "i64"
+                    },
+                    {
+                        "name": "expiry",
+                        "docs": [
+                            "Unix timestamp of when the pool expires, in seconds."
+                        ],
+                        "type": "i64"
+                    },
+                    {
+                        "name": "owner",
+                        "docs": ["The owner of the pool."],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "whitelist",
+                        "docs": [
+                            "The whitelist of the pool, determining which NFTs can be deposited or sold into the pool."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "rent_payer",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "currency",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount",
+                        "docs": ["The amount of currency held in the pool."],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "price_offset",
+                        "docs": [
+                            "The difference between the number of buys and sells",
+                            "where a postive number indicates the taker has BOUGHT more NFTs than sold",
+                            "and a negative number indicates the taker has SOLD more NFTs than bought.",
+                            "This is used to calculate the current price of the pool."
+                        ],
+                        "type": "i32"
+                    },
+                    {
+                        "name": "nfts_held",
+                        "docs": [
+                            "The number of NFTs currently held in the pool."
+                        ],
+                        "type": "u32"
+                    },
+                    {
+                        "name": "stats",
+                        "docs": [
+                            "Various stats about the pool, including the number of buys and sells."
+                        ],
+                        "type": {
+                            "defined": {
+                                "name": "PoolStats"
+                            }
+                        }
+                    },
+                    {
+                        "name": "shared_escrow",
+                        "docs": [
+                            "If an escrow account is present, it means it's a shared-escrow pool where liquidity is shared with other pools.",
+                            "Default pubkey is interpreted as no value."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "cosigner",
+                        "docs": [
+                            "An offchain actor that signs off to make sure an offchain condition is met (eg trait present).",
+                            "Default pubkey is interpreted as no value."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "maker_broker",
+                        "docs": [
+                            "Maker broker fees will be sent to this address if populated.",
+                            "Default pubkey is interpreted as no value."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "max_taker_sell_count",
+                        "docs": [
+                            "Limit how many buys a pool can execute - useful for shared escrow pools, else keeps buying into infinity."
+                        ],
+                        "type": "u32"
+                    },
+                    {
+                        "name": "config",
+                        "docs": ["Pool configuration values."],
+                        "type": {
+                            "defined": {
+                                "name": "PoolConfig"
+                            }
+                        }
+                    },
+                    {
+                        "name": "reserved",
+                        "docs": ["Reserved space for future upgrades."],
+                        "type": {
+                            "array": ["u8", 100]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "constants": [
+        {
+            "name": "CURRENT_POOL_VERSION",
+            "type": "u8",
+            "value": "1"
+        },
+        {
+            "name": "MAX_MM_FEES_BPS",
+            "type": "u16",
+            "value": "7500"
+        },
+        {
+            "name": "MAX_DELTA_BPS",
+            "type": "u16",
+            "value": "9999"
+        }
+    ]
+}

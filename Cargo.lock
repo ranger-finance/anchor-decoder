@@ -1738,6 +1738,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "tensor-amm-decoder"
+version = "0.1.0"
+dependencies = [
+ "anchor-decoder",
+ "borsh 0.10.4",
+ "borsh-derive 0.10.4",
+ "solana-sdk",
+]
+
+[[package]]
+name = "tensor-marketplace-decoder"
+version = "0.1.0"
+dependencies = [
+ "anchor-decoder",
+ "borsh 0.10.4",
+ "borsh-derive 0.10.4",
+ "solana-sdk",
+]
+
+[[package]]
 name = "termcolor"
 version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
