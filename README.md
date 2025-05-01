@@ -83,7 +83,7 @@ match decode_account(&account_data) {
 }
 ```
 
-There are more examples in the [examples/](https://github.com/jshiohaha/anchor-decoder/tree/master/examples) directory.
+There are more examples in the [examples/](https://github.com/ranger-finance/anchor-decoder/tree/master/examples) directory.
 
 ## License
 
