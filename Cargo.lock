@@ -894,7 +894,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "jupiter-decoder"
+name = "jupiter-aggregator-decoder"
 version = "0.1.0"
 dependencies = [
  "anchor-decoder",
