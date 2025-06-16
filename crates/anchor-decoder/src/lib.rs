@@ -375,7 +375,7 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                 #struct_name(#struct_name)
             });
             match_arms.push(quote! {
-                x if x == #struct_name::DISCRIMINATOR => {
+                if disc == #struct_name::DISCRIMINATOR {
                     if let Ok(decoded) = #struct_name::decode(data) {
                         return Some(DecodedInstruction::#struct_name(decoded));
                     }
@@ -406,8 +406,8 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                 #struct_name
             });
             match_arms.push(quote! {
-                x if x == #struct_name::DISCRIMINATOR => {
-                    return Some(DecodedInstruction::#struct_name)
+                if disc == #struct_name::DISCRIMINATOR {
+                    return Some(DecodedInstruction::#struct_name);
                 }
             });
         }
@@ -434,7 +434,7 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                 #type_ident(#type_ident)
             });
             account_match_arms.push(quote! {
-                x if x == #disc_tokens => {
+                if disc == #disc_tokens {
                     if let Ok(decoded) = #type_ident::decode(&data[8..]) {
                         return Some(DecodedAccount::#type_ident(decoded));
                     }
@@ -464,7 +464,7 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
                 #type_ident(#type_ident)
             });
             event_match_arms.push(quote! {
-                x if x == #disc_tokens => {
+                if disc == #disc_tokens {
                     if let Ok(decoded) = #type_ident::decode(&data[8..]) {
                         return Some(DecodedEvent::#type_ident(decoded));
                     }
@@ -496,17 +496,17 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
         pub fn decode_instruction(data: &[u8]) -> Option<DecodedInstruction> {
             if data.len() < 8 { return None; }
             let disc = &data[..8];
-            match disc {
-                #( #match_arms, )*
-                _ => {
-                    if disc == EMIT_CPI_INSTRUCTION_DISCRIMINATOR {
-                        let payload = &data[8..];
-                        decode_event(payload).map(|event| DecodedInstruction::EmitCpi(event))
-                    } else {
-                        None
-                    }
-                },
+            
+            #( #match_arms )*
+            
+            if disc == EMIT_CPI_INSTRUCTION_DISCRIMINATOR {
+                let payload = &data[8..];
+                if let Some(event) = decode_event(payload) {
+                    return Some(DecodedInstruction::EmitCpi(event));
+                }
             }
+            
+            None
         }
 
         #[derive(Debug)]
@@ -517,12 +517,10 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
         pub fn decode_account(data: &[u8]) -> Option<DecodedAccount> {
             if data.len() < 8 { return None; }
             let disc = &data[..8];
-            match disc {
-                #( #account_match_arms, )*
-                _ => {
-                    None
-                },
-            }
+            
+            #( #account_match_arms )*
+            
+            None
         }
 
         #[derive(Debug)]
@@ -540,12 +538,9 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             if data.len() < 8 { return None; }
             let disc = &data[..8];
 
-            match disc {
-                #( #event_match_arms, )*
-                _ => {
-                    None
-                }
-            }
+            #( #event_match_arms )*
+            
+            None
         }
     };
 
