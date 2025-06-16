@@ -371,9 +371,10 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             match_arms.push(quote! {
                 x if x == #struct_name::DISCRIMINATOR => {
-                    return Some(DecodedInstruction::#struct_name(
-                        #struct_name::decode(data).ok()?
-                    ))
+                    match #struct_name::decode(data) {
+                        Ok(decoded) => return Some(DecodedInstruction::#struct_name(decoded)),
+                        Err(_) => {}
+                    }
                 }
             });
         } else {
@@ -430,9 +431,10 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             account_match_arms.push(quote! {
                 x if x == #disc_tokens => {
-                    return Some(DecodedAccount::#type_ident(
-                        #type_ident::decode(&data[8..]).ok()?
-                    ))
+                    match #type_ident::decode(&data[8..]) {
+                        Ok(decoded) => return Some(DecodedAccount::#type_ident(decoded)),
+                        Err(_) => {}
+                    }
                 }
             });
         }
@@ -460,9 +462,10 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             event_match_arms.push(quote! {
                 x if x == #disc_tokens => {
-                    return Some(DecodedEvent::#type_ident(
-                        #type_ident::decode(&data[8..]).ok()?
-                    ))
+                    match #type_ident::decode(&data[8..]) {
+                        Ok(decoded) => return Some(DecodedEvent::#type_ident(decoded)),
+                        Err(_) => {}
+                    }
                 }
             });
         }
