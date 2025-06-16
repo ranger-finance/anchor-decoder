@@ -27,15 +27,20 @@ fn map_idl_type(arg_type: &Value, generated_types: &HashSet<String>) -> proc_mac
         match s {
             "u8" => quote! { u8 },
             "u16" => quote! { u16 },
+            "u32" => quote! { u32 },
             "u64" => quote! { u64 },
             "i64" => quote! { i64 },
             "bool" => quote! { bool },
             "pubkey" => quote! { Pubkey },
             "string" => quote! { String },
-            _ => quote! { () }, // fallback for unsupported types
+            "bytes" => quote! { Vec<u8> },
+            _ => quote! { () },
         }
     } else if let Some(obj) = arg_type.as_object() {
-        if let Some(array_val) = obj.get("array") {
+        if let Some(vec_type) = obj.get("vec") {
+            let inner = map_idl_type(vec_type, generated_types);
+            return quote! { Vec<#inner> };
+        } else if let Some(array_val) = obj.get("array") {
             if let Some(arr) = array_val.as_array() {
                 if arr.len() == 2 {
                     let inner = map_idl_type(&arr[0], generated_types);
@@ -371,9 +376,8 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             match_arms.push(quote! {
                 x if x == #struct_name::DISCRIMINATOR => {
-                    match #struct_name::decode(data) {
-                        Ok(decoded) => return Some(DecodedInstruction::#struct_name(decoded)),
-                        Err(_) => {}
+                    if let Ok(decoded) = #struct_name::decode(data) {
+                        return Some(DecodedInstruction::#struct_name(decoded));
                     }
                 }
             });
@@ -431,9 +435,8 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             account_match_arms.push(quote! {
                 x if x == #disc_tokens => {
-                    match #type_ident::decode(&data[8..]) {
-                        Ok(decoded) => return Some(DecodedAccount::#type_ident(decoded)),
-                        Err(_) => {}
+                    if let Ok(decoded) = #type_ident::decode(&data[8..]) {
+                        return Some(DecodedAccount::#type_ident(decoded));
                     }
                 }
             });
@@ -462,9 +465,8 @@ pub fn anchor_idl(attr: TokenStream, _item: TokenStream) -> TokenStream {
             });
             event_match_arms.push(quote! {
                 x if x == #disc_tokens => {
-                    match #type_ident::decode(&data[8..]) {
-                        Ok(decoded) => return Some(DecodedEvent::#type_ident(decoded)),
-                        Err(_) => {}
+                    if let Ok(decoded) = #type_ident::decode(&data[8..]) {
+                        return Some(DecodedEvent::#type_ident(decoded));
                     }
                 }
             });
